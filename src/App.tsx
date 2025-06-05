@@ -4,6 +4,7 @@ import {BrowserRouter as Router,Routes,Route} from 'react-router-dom';
 import BoardList from "./components/board/BoardList";
 import BoardInsert from "./components/board/BoardInsert";
 import BoardDetail from "./components/board/BoardDetail";
+import BoardDelete from "./components/board/BoardDelete";
 function App() {
   return (
     <Fragment>
@@ -12,6 +13,7 @@ function App() {
           <Route path="/board/list" element={<BoardList/>} />
           <Route path={"/board/insert"} element={<BoardInsert/>}/>
           <Route path={"/board/detail/:no"} element={<BoardDetail/>}/>
+          <Route path={"/board/delete/:no"} element={<BoardDelete/>}/>
         </Routes>
       </Router>
     </Fragment>
