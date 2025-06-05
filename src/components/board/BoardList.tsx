@@ -28,6 +28,8 @@ function BoardList(){
     if(isError)
         return <h3>서버 에러 발생 : {`${error}`}</h3>
 
+    const prev=()=> setCurpage(curpage>1?curpage-1:curpage)
+    const next=()=> setCurpage(data?.data && curpage<data.data.totalpage?curpage+1:curpage)
     return (
        <div className="container">
            <div className="row">
@@ -56,7 +58,12 @@ function BoardList(){
                        data?.data.list.map((board:BoardItem) => (
                            <tr>
                                <td className={"text-center"}>{board.no}</td>
-                               <td>{board.subject}</td>
+                               <td>{board.subject}
+                                   {
+                                       board.dbday === data.data.today &&
+                                        <sup style={{color:'red'}}>new</sup>
+                                   }
+                               </td>
                                <td className={"text-center"}>{board.name}</td>
                                <td className={"text-center"}>{board.dbday}</td>
                                <td className={"text-center"}>{board.hit}</td>
@@ -65,9 +72,9 @@ function BoardList(){
                    }
                    <tr>
                        <td colSpan={5} className={"text-center"}>
-                           <button className={"btn btn-success"}>이전</button>
+                           <button className={"btn btn-success"} onClick={prev}>이전</button>
                            {data?.data.curpage} page / {data?.data.totalpage} pages
-                           <button className={"btn btn-success"}>다음</button>
+                           <button className={"btn btn-success"} onClick={next}>다음</button>
                        </td>
                    </tr>
                    </tbody>
