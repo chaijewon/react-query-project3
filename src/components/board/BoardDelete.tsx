@@ -17,7 +17,7 @@ function BoardDelete(){
     // 데이터 전송 (삭제 요청)
     const {mutate:boardDelete} = useMutation({
         mutationFn:async()=>{
-            return await apiClient.post(`/board/delete/${no}/${pwd}`)
+            return await apiClient.delete(`/board/delete/${no}/${pwd}`)
         },
         onSuccess:(res)=>{
             if(res.data.msg==='yes')
@@ -54,6 +54,7 @@ function BoardDelete(){
             <div className={"row"} style={{"width":"350px"}}>
                 <h3>삭제하기</h3>
                 <table className="table">
+                    <tbody>
                     <tr>
                         <td className={"text-center"}>
                             비밀번호 : <input type={"password"} size={20} className={"input-sm"}
@@ -69,6 +70,7 @@ function BoardDelete(){
                             <button className={"btn btn-warning"} onClick={cancel}>취소</button>
                         </td>
                     </tr>
+                    </tbody>
                 </table>
             </div>
         </div>

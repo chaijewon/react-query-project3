@@ -1,7 +1,7 @@
-import {useParams,useNavigate,Link} from "react-router";
+import {useParams, useNavigate, Link, useNavigationType} from "react-router";
 import {useQuery} from "@tanstack/react-query";
 import apiClient from "../../http-commons";
-import {useEffect} from "react";
+import {useEffect,useRef} from "react";
 interface BoardDetailResponse {
     no:number;
     name:string;
@@ -14,6 +14,8 @@ interface BoardDetailResponse {
 function BoardDetail() {
     const {no}= useParams<{no:string}>();
     const nav=useNavigate();
+    const type=useNavigationType() // /path : PUSH , -1 : POP
+    console.log(type)
     const {isLoading,isError,error,data,refetch:boardDetail}=useQuery<{data:BoardDetailResponse}>({
         queryKey:["board-detail",no],
         queryFn:async()=>{
@@ -22,7 +24,8 @@ function BoardDetail() {
     })
 
     useEffect(() => {
-        if(!isLoading)
+
+        if(type!=='POP')
         {
             boardDetail();
         }
@@ -67,7 +70,7 @@ function BoardDetail() {
                     <tr>
                         <td colSpan={4} className={"text-right"}>
                             <Link className="btn btn-primary btn-xs" to={""}>수정</Link>
-                            <Link className="btn btn-primary btn-xs" to={""}>삭제</Link>
+                            <Link className="btn btn-primary btn-xs" to={"/board/delete/"+board.no}>삭제</Link>
                             <Link className="btn btn-primary btn-xs" to={"/board/list"}>목록</Link>
                         </td>
                     </tr>
