@@ -48,6 +48,47 @@ function BoardUpdate(){
         }
 
     }, [board]);
+
+    // 수정
+    // TypeScript => 매개변수의 데이터형 처리
+    const {mutate:boardUpdate}=useMutation({
+        mutationFn:()=>apiClient.put(`/board/update_ok`,{
+            no:no,
+            name:name,
+            subject:subject,
+            content:content,
+            pwd:pwd,
+        }),
+        onSuccess:(res:AxiosResponse<BoardUpdateResponse>)=>{
+            console.log(res)
+            if(res.data.msg==='yes') {
+                window.location.href = `/board/detail/${no}` ;
+            }
+            else
+            {
+                alert("비밀번호가 틀립니다")
+                setPwd("")
+                pwdRef.current?.focus()
+            }
+        },
+        onError:(err:AxiosError)=>{
+            console.log(err)
+        }
+    })
+    const boardUpdateOk=()=>{
+        if(!name.trim()) // name.trim()===""
+            return nameRef.current?.focus()
+        if(!subject.trim())
+            return subjectRef.current?.focus()
+        if(!content.trim())
+            return contentRef.current?.focus()
+        if(!pwd.trim())
+            return pwdRef.current?.focus()
+        boardUpdate()
+    }
+    const cancel=():void=>{
+        nav(-1)
+    }
     return (
         <div className={"container"}>
             <div className="row">
@@ -96,8 +137,8 @@ function BoardUpdate(){
                     </tr>
                     <tr>
                         <td colSpan={2} className={"text-center"}>
-                            <button className={"btn btn-primary"} >글쓰기</button>
-                            <button className={"btn btn-primary"} >취소</button>
+                            <button className={"btn btn-primary"} onClick={boardUpdateOk}>수정</button>
+                            <button className={"btn btn-primary"} onClick={cancel}>취소</button>
                         </td>
                     </tr>
                     </tbody>
