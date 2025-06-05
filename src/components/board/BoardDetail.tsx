@@ -69,7 +69,7 @@ function BoardDetail() {
                     </tr>
                     <tr>
                         <td colSpan={4} className={"text-right"}>
-                            <Link className="btn btn-primary btn-xs" to={""}>수정</Link>
+                            <Link className="btn btn-primary btn-xs" to={"/board/update/"+board.no}>수정</Link>
                             <Link className="btn btn-primary btn-xs" to={"/board/delete/"+board.no}>삭제</Link>
                             <Link className="btn btn-primary btn-xs" to={"/board/list"}>목록</Link>
                         </td>
