@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useState,useEffect} from "react";
 import {useQuery} from "@tanstack/react-query";
 import {Link} from "react-router-dom";
 import apiClient from "../../http-commons";
@@ -19,17 +19,29 @@ interface BoardListResponse {
 function BoardList(){
     const [curpage, setCurpage] = useState<number>(1);
     // 데이터형을 지정 => 가독성
-    const {isLoading,isError,error,data}=useQuery<{data:BoardListResponse}>({
+    const {isLoading,isError,error,data,refetch:hitIncrement}=useQuery<{data:BoardListResponse}>({
         queryKey:["board-list",curpage],
         queryFn:async()=>await apiClient.get(`/board/list/${curpage}`)
     })
+
+    // 조회수 증가 => 재호출
+    useEffect(() => {
+        hitIncrement();
+    }, [curpage]);
+    // 페이지 변경시마다 한번 재호출
+
     if(isLoading)
         return <h3>서버에서 데이터 전송 지연</h3>
     if(isError)
         return <h3>서버 에러 발생 : {`${error}`}</h3>
 
+
+
     const prev=()=> setCurpage(curpage>1?curpage-1:curpage)
     const next=()=> setCurpage(data?.data && curpage<data.data.totalpage?curpage+1:curpage)
+
+
+
     return (
        <div className="container">
            <div className="row">
@@ -58,7 +70,7 @@ function BoardList(){
                        data?.data.list.map((board:BoardItem) => (
                            <tr>
                                <td className={"text-center"}>{board.no}</td>
-                               <td>{board.subject}
+                               <td><Link to={"/board/detail/"+board.no}>{board.subject}</Link>
                                    {
                                        board.dbday === data.data.today &&
                                         <sup style={{color:'red'}}>new</sup>
