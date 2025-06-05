@@ -21,8 +21,13 @@ function BoardList(){
     // 데이터형을 지정 => 가독성
     const {isLoading,isError,error,data}=useQuery<{data:BoardListResponse}>({
         queryKey:["board-list",curpage],
-        queryFn:async()=>await apiClient.get(`/boards/list/${curpage}`)
+        queryFn:async()=>await apiClient.get(`/board/list/${curpage}`)
     })
+    if(isLoading)
+        return <h3>서버에서 데이터 전송 지연</h3>
+    if(isError)
+        return <h3>서버 에러 발생 : {`${error}`}</h3>
+
     return (
        <div className="container">
            <div className="row">
@@ -46,6 +51,26 @@ function BoardList(){
                          <th className={"text-center"}>조회수</th>
                      </tr>
                    </thead>
+                   <tbody>
+                   {
+                       data?.data.list.map((board:BoardItem) => (
+                           <tr>
+                               <td className={"text-center"}>{board.no}</td>
+                               <td>{board.subject}</td>
+                               <td className={"text-center"}>{board.name}</td>
+                               <td className={"text-center"}>{board.dbday}</td>
+                               <td className={"text-center"}>{board.hit}</td>
+                           </tr>
+                       ))
+                   }
+                   <tr>
+                       <td colSpan={5} className={"text-center"}>
+                           <button className={"btn btn-success"}>이전</button>
+                           {data?.data.curpage} page / {data?.data.totalpage} pages
+                           <button className={"btn btn-success"}>다음</button>
+                       </td>
+                   </tr>
+                   </tbody>
                </table>
            </div>
        </div>
