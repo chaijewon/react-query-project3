@@ -1,0 +1,55 @@
+import {useState} from "react";
+import {useQuery} from "@tanstack/react-query";
+import {Link} from "react-router-dom";
+import apiClient from "../../http-commons";
+// 서버에서 전송된 데이터를 모아서 => 데이터형을 제작 => type BoardItem{} => 구조체
+interface BoardItem {
+    no: number;
+    subject: string;
+    name: string;
+    dbday:string;
+    hit:number;
+}
+interface BoardListResponse {
+    list: BoardItem[];
+    today: string;
+    curpage:number;
+    totalpage:number;
+}
+function BoardList(){
+    const [curpage, setCurpage] = useState<number>(1);
+    // 데이터형을 지정 => 가독성
+    const {isLoading,isError,error,data}=useQuery<{data:BoardListResponse}>({
+        queryKey:["board-list",curpage],
+        queryFn:async()=>await apiClient.get(`/boards/list/${curpage}`)
+    })
+    return (
+       <div className="container">
+           <div className="row">
+               <h3>TanStackQuery+TypeScript를 활용한 게시판</h3>
+               <table className="table">
+                   <tbody>
+                   <tr>
+                       <td>
+                           <Link to={"/board/insert"} className="btn btn-primary">새글</Link>
+                       </td>
+                   </tr>
+                   </tbody>
+               </table>
+               <table className="table">
+                   <thead>
+                     <tr>
+                         <th className={"text-center"}>번호</th>
+                         <th className={"text-center"}>제목</th>
+                         <th className={"text-center"}>이름</th>
+                         <th className={"text-center"}>작성일</th>
+                         <th className={"text-center"}>조회수</th>
+                     </tr>
+                   </thead>
+               </table>
+           </div>
+       </div>
+    )
+}
+
+export default BoardList;
